@@ -104,7 +104,7 @@ function exportPipeline() {
     }
 }
 
-function importPipeline() {
+function importPipeline(secret=secretKey) {
     var input = document.createElement('input');
     input.type = 'file';
     input.accept = '.xlsx'; // Asegurarse de que solo se puedan seleccionar archivos Excel
@@ -129,8 +129,11 @@ function importPipeline() {
                 savedPipelines[fullPositionName] = pipelineData;
             });
 
+            savedPipelinesJSON = JSON.stringify(savedPipelines);
+            const encryptedData = encryptData(savedPipelinesJSON, secret);
             // Guardar en Local Storage
-            localStorage.setItem('pipelines', JSON.stringify(savedPipelines));
+            localStorage.setItem('pipelines', encryptedData);
+
             notyf.success('Pipelines imported successfully');
             fillPipelineSelect();
 
