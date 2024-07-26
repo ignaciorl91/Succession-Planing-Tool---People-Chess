@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- add favicom -->
+    <link rel="icon" href="/Pictures/Knight.jpg" type="image/x-icon">
+    <title>People Chess</title>
+    <link rel="stylesheet" href="style/style.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div id="mainTree" class="col">
+
+                <div id="zoomBtns">
+                    <i class="bi bi-zoom-in" id="zoomIn"></i>
+                    <i class="bi bi-zoom-out" id="zoomOut"></i>
+                </div>
+                <div id="level0">
+                    <article ondragover="allowDrop(event)" ondrop="composeNewDrag(event)" class="article"
+                        style="height: 100px;">
+                        <div class="article-content">
+                            <h5>Drag an Employee Here to Start or Load a Pipeline</h5>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div id="rightPanel" class="col-3">
+                <div id="pannel">
+                    <div id="divLogo">
+
+
+                        <a href="https://www.linkedin.com/in/ignacio-ruiz-luque" target="_blank"
+                            rel="noopener noreferrer">
+
+                            <h6>
+                                Developed by: Ignacio Ruiz Luque
+                            </h6>
+                        </a>
+                    </div>
+                    <div>
+                        <div class="pannelLine">
+                            <button id="save" onclick="saveInLocalStorage()" class="btn btn-success">Save Draft
+                            </button>
+                            <!-- <label for="pipelineSelect">Drafts:</label> -->
+                            <select name="pipelineSelect" id="pipelineSelect" class="form-select">
+                            </select>
+                            <i class="bi bi-pencil-fill" id="editDraftsBtn" data-toggle="modal"
+                                data-target="#editDraftsModal"></i>
+
+                            <!-- edit modal -->
+                            <div id="editDraftsModal" class="modal fade" tabindex="-1"
+                                aria-labelledby="editDraftsModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editDraftsModalLabel">Manage Drafts</h5>
+                                        </div>
+                                        <div class="modal-body" id="adminDraftsBody">
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="pannelLine">
+                            <button id="new" onclick="startPositionTrigger()" class="btn btn-warning">New Starting
+                                Position</button>
+                            <button id="load" onclick="importPipeline()" class="btn btn-warning">Import</button>
+                            <button id="export" onclick="exportPipeline()" class="btn btn-warning">Export</button>
+                            <!-- <button id="clear" onclick="clearPipeline()" class="btn btn-danger">Clear Tree</button> -->
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="hccontainer">
+                    <!-- Example table -->
+                    <table id="headcount" class="display">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <!-- <th>Global ID</th> -->
+                                <th>Name</th>
+                                <th>Position Name</th>
+                                <th>Readiness</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <!-- libreria para exportar a xlsx -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- noty -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/notyf/notyf.min.js"></script>
+    <!-- CryptoJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+
+    <!-- Custom JS -->
+    <!-- data -->
+    <script src="js/sampledata.js"></script>
+    <script src="js/successionPlansData.js"></script>
+    <script src="js/HCData.js"></script>
+
+    <!-- scripts -->
+    <script src="js/candidateSelection.js"></script>
+    <script src="js/deletions.js"></script>
+    <script src="js/pipes.js"></script>
+    <script src="js/table.js"></script>
+    <script src="js/createPipesFromPlans.js"></script>
+    <script src="js/crypto.js"></script>
+    <script src="js/panel.js"></script>
+    <script src="js/kpis.js"></script>
+    <script>
+        // script.js
+        document.addEventListener("DOMContentLoaded", () => {
+            const container = document.getElementById('level0');
+            const zoomInButton = document.getElementById('zoomIn');
+            const zoomOutButton = document.getElementById('zoomOut');
+
+            let scale = 1;
+
+            zoomInButton.addEventListener('click', () => {
+                scale += 0.1;
+                container.style.transform = `scale(${scale})`;
+            });
+
+            zoomOutButton.addEventListener('click', () => {
+                scale = Math.max(0.1, scale - 0.1); // Asegurarse de que el zoom no sea menor que 0.1
+                container.style.transform = `scale(${scale})`;
+            });
+        });
+
+    </script>
+</body>
+
+</html>
