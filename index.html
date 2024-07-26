@@ -162,6 +162,21 @@
                 container.style.transform = `scale(${scale})`;
             });
         });
+        document.addEventListener("DOMContentLoaded", () => {
+    Swal.fire({
+        icon: "success",
+        title: "Welcome to People Chess!",
+        html: `
+            Welcome to People Chess! This tool is designed to help you visualize your succession plans.<br><br>
+            You can easily drag and drop employees to build your pipeline, and import or export your pipelines as needed.<br><br>
+            Please note that all data, including names, positions, and bands, are dummy data for demonstration purposes.<br><br>
+            Enjoy exploring and managing your succession plans!
+        `,
+        confirmButtonText: 'Got it!'
+    });
+});
+
+
 
     </script>
 </body>
