@@ -1,12 +1,10 @@
 import random
 import json
 
-# Cargar los datos de empleados desde el archivo JSON
+# Load Data from JSON
 with open('employees.json', 'r') as file:
     employees = json.load(file)
 
-# Filtrar empleados cuyo campo L1 sea "Y"
-# l1_employees = [e for e in employees if e["L1"] == "Y"]
 
 def generate_successor_plan(incumbent):
     incumbent_id = incumbent["Global ID"]
